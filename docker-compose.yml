@@ -1,0 +1,18 @@
+version: '2'  # Versi Docker Compose yang digunakan
+
+services:
+  item-app:  # Layanan untuk aplikasi item
+    image: ghcr.io/nexiest/item-app:v1
+      - "80:8080"  # Memetakan port 80 dari host ke port 8080 di kontainer
+    depends_on:
+      - item-db  # Menandakan bahwa layanan ini bergantung pada layanan item-db
+    restart: always  # Selalu restart layanan jika terhenti
+
+  item-db:  # Layanan untuk database item
+    image: mongo:3  # Menggunakan gambar MongoDB versi 3
+    volumes:
+      - app-db:/data/db  # Memetakan volume "app-db" ke direktori "/data/db" di kontainer
+    restart: always  # Selalu restart layanan jika terhenti
+
+volumes:
+  app-db:  # Volume untuk menyimpan data database

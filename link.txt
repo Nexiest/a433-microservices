@@ -1,0 +1,1 @@
+ghcr.io/nexiest/item-app:v1
