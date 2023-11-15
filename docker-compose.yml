@@ -16,3 +16,5 @@ services:
 
 volumes:
   app-db:  # Volume untuk menyimpan data database
+
+  1
