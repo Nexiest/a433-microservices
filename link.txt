@@ -1,3 +1,1 @@
-ghcr.io/nexiest/item-app:v1
-
-1
+https://github.com/users/nexiest/packages/container/package/item-app

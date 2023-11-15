@@ -12,5 +12,3 @@ docker login -u nexiest --password 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 ghcr
 
 # Mengunggah image ke Docker Hub
 docker push ghcr.io/nexiest/item-app:v1
-
-1

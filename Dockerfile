@@ -21,5 +21,3 @@ EXPOSE 8080
 
 # Menjalankan perintah 'npm start' ketika container dijalankan
 CMD ["npm", "start"]
-
-1
