@@ -1,0 +1,22 @@
+# Tentukan versi API Kubernetes dan jenis sumber daya yang dibuat, yaitu Service.
+apiVersion: v1
+kind: Service
+
+# Metadata yang berisi informasi tentang Service, termasuk label dan nama.
+metadata:
+  labels:
+    app: karsajobs
+  name: karsajobs
+
+# Spesifikasi untuk Service, termasuk tipe layanan, port yang diekspos, dan pemetaan ke Pods.
+spec:
+  type: NodePort  # Jenis layanan, dalam hal ini, NodePort.
+  ports:
+    - protocol: TCP
+      port: 8080  # Port yang akan diakses dari luar cluster.
+      targetPort: 8080  # Port yang dituju di dalam Pods.
+      nodePort: 30100  # Port yang akan terbuka di semua node cluster.
+
+  # Selector untuk memilih Pods yang akan menjadi target dari Service ini.
+  selector:
+    app: karsajobs

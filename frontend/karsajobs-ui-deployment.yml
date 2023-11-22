@@ -1,0 +1,37 @@
+# Tentukan versi API Kubernetes dan jenis sumber daya yang dibuat, yaitu Deployment.
+apiVersion: apps/v1
+kind: Deployment
+
+# Metadata yang berisi informasi tentang Deployment, termasuk nama.
+metadata:
+  name: karsajobs-ui-deployment
+
+# Spesifikasi untuk Deployment, termasuk jumlah replika yang akan dipelihara.
+spec:
+  replicas: 1
+
+  # Selector untuk mencocokkan label Pods yang dikontrol oleh Deployment ini.
+  selector:
+    matchLabels:
+      app: karsajobs-ui
+
+  # Template untuk membuat Pods yang dikontrol oleh Deployment ini.
+  template:
+    metadata:
+      labels:
+        app: karsajobs-ui
+    spec:
+      # Container-container dalam Pod.
+      containers:
+        - name: karsajobs-ui
+          # Gambar Docker yang akan digunakan untuk container.
+          image: ghcr.io/nexiest/karsajobs-ui:latest
+          
+          # Port yang akan diekspos dari container.
+          ports:
+            - containerPort: 8000
+
+          # Variabel lingkungan untuk container.
+          env:
+            - name: VUE_APP_BACKEND
+              value: http://192.168.34.5:30100

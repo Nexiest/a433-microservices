@@ -1,0 +1,59 @@
+# Tentukan versi API Kubernetes dan jenis sumber daya yang dibuat, yaitu StatefulSet.
+apiVersion: apps/v1
+kind: StatefulSet
+
+# Metadata yang berisi informasi tentang StatefulSet, termasuk nama dan label.
+metadata:
+  name: mongo
+  labels:
+    app: mongo-app
+
+# Spesifikasi untuk StatefulSet, termasuk selektor, nama layanan, jumlah replika, dan template Pods.
+spec:
+  selector:
+    matchLabels:
+      app: mongo-app
+      tier: backend
+  serviceName: mongo
+  replicas: 1
+
+  # Membuat Pods yang dikontrol oleh StatefulSet ini.
+  template:
+    metadata:
+      labels:
+        app: mongo-app
+        tier: backend
+    spec:
+      containers:
+        - image: mongo:4.4
+          name: mongo
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              value: /etc/mongo-secret/MONGO_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              value: /etc/mongo-secret/MONGO_ROOT_PASSWORD
+          ports:
+            - containerPort: 27027
+              name: mongo
+          volumeMounts:
+            - name: mongo-pvc
+              mountPath: /data/db
+            - name: mongo-config-map
+              mountPath: /config
+            - name: mongo-secret
+              mountPath: /etc/mongo-secret
+
+  # Volumes yang digunakan oleh Pods dalam StatefulSet ini.
+  volumes:
+    - name: mongo-pvc
+      persistentVolumeClaim:
+        claimName: mongo-pvc
+    - name: mongo-config-map
+      configMap:
+        name: mongo-configmap
+        items:
+          - key: mongo.conf
+            path: mongo.conf
+    - name: mongo-secret
+      secret:
+        secretName: mongo-secret

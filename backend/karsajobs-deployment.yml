@@ -1,0 +1,51 @@
+# Tentukan versi API Kubernetes dan jenis sumber daya yang dibuat, yaitu Deployment.
+apiVersion: apps/v1
+kind: Deployment
+
+# Bagian metadata berisi informasi tentang Deployment, termasuk namanya dan labelnya.
+metadata:
+  name: karsajobs-deployment
+  labels:
+    app: karsajobs
+
+# Spesifikasi untuk Deployment, termasuk jumlah replika yang akan dipelihara.
+spec:
+  replicas: 1
+
+  # Selector untuk mencocokkan label Pods yang dikontrol oleh Deployment ini.
+  selector:
+    matchLabels:
+      app: karsajobs
+
+  # Template untuk membuat Pods yang dikontrol oleh Deployment ini.
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+    spec:
+      # Container-container dalam Pod.
+      containers:
+        - name: karsajobs
+          # Gambar Docker yang akan digunakan untuk container.
+          image: ghcr.io/nexiest/karsajobs:latest
+          
+          # Port yang akan diekspos dari container.
+          ports:
+            - containerPort: 8080
+
+          # Variabel lingkungan untuk container.
+          env:
+            - name: APP_PORT
+              value: "8080"
+            - name: MONGO_HOST
+              value: "mongo-service"
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_USERNAME
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_PASSWORD
