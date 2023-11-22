@@ -12,3 +12,5 @@ echo "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" | docker login ghcr.io -u nexies
 
 # Mengirimkan (push) image Docker ke GitHub Container Registry
 docker push ghcr.io/nexiest/karsajobs:latest
+
+
