@@ -1,0 +1,48 @@
+# Service Configuration for shipping-service
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping-service
+spec:
+  # Selector untuk memilih pod yang akan diatur oleh service
+  selector:
+    app: shipping-service
+  # Konfigurasi port untuk service
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+
+---
+# Deployment Configuration for shipping-service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-service
+  labels:
+    app: shipping-service
+spec:
+  # Jumlah replika pod yang akan dijalankan oleh deployment
+  replicas: 1
+  # Selector untuk memilih pod yang akan diatur oleh deployment
+  selector:
+    matchLabels:
+      app: shipping-service
+  # Template untuk pod yang akan dibuat oleh deployment
+  template:
+    metadata:
+      labels:
+        app: shipping-service
+    spec:
+      # Konfigurasi container dalam pod
+      containers:
+        - name: shipping-service
+          # Image yang akan digunakan untuk container
+          image: ghcr.io/nexiest/shipping-service:latest
+          # Konfigurasi port untuk container
+          ports:
+            - containerPort: 3001
+          # Variabel lingkungan untuk container
+          env:
+            - name: AMQP_URL
+              value: "amqp://rabbitmq:5672"

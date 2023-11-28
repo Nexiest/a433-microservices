@@ -1,0 +1,48 @@
+# Service Configuration for order-service
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  # Selector untuk memilih pod yang akan diatur oleh service
+  selector:
+    app: order-service
+  # Konfigurasi port untuk service
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+
+---
+# Deployment Configuration for order-service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  labels:
+    app: order-service
+spec:
+  # Jumlah replika pod yang akan dijalankan oleh deployment
+  replicas: 1
+  # Selector untuk memilih pod yang akan diatur oleh deployment
+  selector:
+    matchLabels:
+      app: order-service
+  # Template untuk pod yang akan dibuat oleh deployment
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      # Konfigurasi container dalam pod
+      containers:
+        - name: order-service
+          # Image yang akan digunakan untuk container
+          image: ghcr.io/nexiest/order-service:latest
+          # Konfigurasi port untuk container
+          ports:
+            - containerPort: 3000
+          # Variabel lingkungan untuk container
+          env:
+            - name: AMQP_URL
+              value: "amqp://rabbitmq:5672"
