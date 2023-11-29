@@ -1,0 +1,40 @@
+# Versi API Kubernetes yang digunakan untuk objek Deployment
+apiVersion: apps/v1
+
+# Jenis objek yang ingin kita buat adalah Deployment
+kind: Deployment
+
+# Metadata untuk Deployment, termasuk nama Deployment
+metadata:
+  name: order-service-deployment
+
+# Spesifikasi untuk Deployment
+spec:
+  # Jumlah replika pod yang ingin dibuat (dalam hal ini, 1 pod)
+  replicas: 1
+
+  # Selector untuk menentukan pod mana yang akan dipengaruhi oleh Deployment
+  selector:
+    matchLabels:
+      app: order-service
+
+  # Template untuk pod yang akan dibuat oleh Deployment
+  template:
+    metadata:
+      labels:
+        # Label yang digunakan oleh selector untuk memilih pod
+        app: order-service
+
+    spec:
+      # Spesifikasi untuk container dalam pod
+      containers:
+        - name: order-service
+          # Nama container
+          
+          # Image Docker yang digunakan untuk container
+          image: ghcr.io/nexiest/order-service:latest
+          
+          # Port yang akan di-expose oleh container
+          ports:
+            - containerPort: 3000
+              # Port 3000 pada container akan di-forward ke luar

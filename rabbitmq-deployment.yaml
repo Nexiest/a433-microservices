@@ -1,0 +1,71 @@
+# Versi API Kubernetes yang digunakan untuk objek Deployment
+apiVersion: apps/v1
+
+# Jenis objek yang ingin kita buat adalah Deployment
+kind: Deployment
+
+# Metadata untuk Deployment, termasuk nama Deployment
+metadata:
+  name: rabbitmq-deployment
+
+# Spesifikasi untuk Deployment
+spec:
+  # Jumlah replika pod yang ingin dibuat (dalam hal ini, 1 pod)
+  replicas: 1
+
+  # Selector untuk menentukan pod mana yang akan dipengaruhi oleh Deployment
+  selector:
+    matchLabels:
+      app: rabbitmq
+
+  # Template untuk pod yang akan dibuat oleh Deployment
+  template:
+    metadata:
+      labels:
+        # Label yang digunakan oleh selector untuk memilih pod
+        app: rabbitmq
+
+    spec:
+      # Spesifikasi untuk container dalam pod
+      containers:
+        - name: rabbitmq
+          # Nama container
+          
+          # Image Docker yang digunakan untuk container
+          image: rabbitmq:3.11-management
+          
+          # Port yang akan di-expose oleh container
+          ports:
+            - containerPort: 5672
+              # Port 5672 pada container akan di-forward ke luar
+            - containerPort: 15672
+              # Port 15672 pada container akan di-forward ke luar
+
+--
+
+# Versi API Kubernetes yang digunakan untuk objek Service
+apiVersion: v1
+
+# Jenis objek yang ingin kita buat adalah Service
+kind: Service
+
+# Metadata untuk Service, termasuk nama Service
+metadata:
+  name: rabbitmq-service
+
+# Spesifikasi untuk Service
+spec:
+  # Selector untuk menentukan pod mana yang akan dilayani oleh Service
+  selector:
+    app: rabbitmq
+
+  # Port yang akan di-expose oleh Service
+  ports:
+    - protocol: TCP
+      port: 5672
+      targetPort: 5672
+      # Port 5672 pada Service akan di-forward ke port 5672 pada pod
+    - protocol: TCP
+      port: 15672
+      targetPort: 15672
+      # Port 15672 pada Service akan di-forward ke port 15672 pada pod
